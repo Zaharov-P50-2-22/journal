@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Список студентов</title>
+</head>
+    <body>
+        <h1>Добавить студента</h1>
+        <form action="/students/add" method="post">
+          <input type="text" name="lastName" placeholder="Фамилия" required>
+          <input type="text" name="firstName" placeholder="Имя" required>
+          <input type="text" name="middleName" placeholder="Отчество" required>
+          <input type="text" name="name" placeholder="Дополнительное имя" required>
+          <button type="submit">Добавить студента</button>
+        </form>
+
+        <h1>Поиск студента:</h1>
+        <form action="/students/search" method="get">
+            <input type="text" name="keyword" placeholder="Введите имя, фамилию..." required>
+            <button type="submit">Найти</button>
+        </form>
+
+        <h1>Фильтр студентов:</h1>
+        <form action="/students/filter" method="get">
+            <input type="text" name="lastName" placeholder="Фамилия">
+            <input type="text" name="firstName" placeholder="Имя">
+            <input type="text" name="middleName" placeholder="Отчество">
+            <button type="submit">Применить фильтр</button>
+        </form>
+
+        <br><br><br><br>
+        <!-- Формы для МНОЖЕСТВЕННОГО удаления -->
+        <form action="/students/delete-multiple" method="post" id="physicalDeleteForm">
+            <button type="submit">Физическое удаление выбранных (Ф)</button>
+        </form>
+
+        <!-- Форма для МНОЖЕСТВЕННОГО ЛОГИЧЕСКОГО удаления -->
+        <form action="/students/logical-delete-multiple" method="post" id="logicalDeleteForm">
+            <button type="submit">Логическое удаление выбранных (Л)</button>
+        </form>
+
+        <h1>Все студенты:</h1>
+            <ul>
+                <th:block th:each="student : ${students}">
+                    <li>
+                        <input type="checkbox" form="physicalDeleteForm" name="studentIds" th:value="${student.id}">
+                        <label for="physicalDeleteForm">Ф</label>
+                        <input type="checkbox" form="logicalDeleteForm" name="studentIds" th:value="${student.id}">
+                        <label for="logicalDeleteForm">Л</label>
+
+                        <span th:text="'  |  ' + ${student.lastName} + ' ' + ${student.firstName} + ' ' + ${student.middleName} + ' ' + ${student.name}"></span>
+
+                        <!-- Форма обновления -->
+                        <form action="/students/update" method="post" style="display:inline;">
+                            <input type="hidden" name="id" th:value="${student.id}"/>
+                            <input type="text" name="lastName" placeholder="Фамилия" required/>
+                            <input type="text" name="name" placeholder="Имя" required/>
+                            <input type="text" name="firstName" placeholder="Отчество" required/>
+                            <input type="text" name="middleName" placeholder="Дополнительное имя" required/>
+                            <button type="submit">Обновить</button>
+                        </form>
+
+                        <!-- ФИЗИЧЕСКОЕ удаление одного -->
+                        <form action="/students/delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" th:value="${student.id}"/>
+                            <button type="submit">Удалить физически</button>
+                        </form>
+
+                        <!-- ЛОГИЧЕСКОЕ удаление одного -->
+                        <form action="/students/logical-delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" th:value="${student.id}"/>
+                            <button type="submit">Удалить логически</button>
+                        </form>
+                    </li>
+                </th:block>
+            </ul>
+    </body>
+</html>
